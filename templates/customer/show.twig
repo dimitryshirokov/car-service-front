@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Клиент №{{ customerId }}{% endblock %}
+
+{% block page_title %}Клиент №{{ customerId }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Клиент{% endblock %}
+                {% block box_body %}
+                    <p><span class="text-bold">Фамилия: </span> {{ customer.surname }}</p>
+                    <p><span class="text-bold">Имя: </span> {{ customer.name }}</p>
+                    {% if customer.patronymic is not null %}
+                        <p><span class="text-bold">Отчество: </span> {{ customer.patronymic }}</p>
+                    {% endif %}
+                    <hr />
+                    <p><span class="text-bold">Телефон: </span> {{ customer.phone }}</p>
+                    <hr />
+                    <p><span class="text-bold">Размер скидки: </span> {{ customer.discountInPercents }}%</p>
+                    <hr />
+                    <a href="{{ path('edit_customer', {customerId: customerId}) }}">
+                        <button class="btn btn-warning">Изменить</button>
+                    </a>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Заказы{% endblock %}
+                {% block box_body %}
+                    <table id="ordersTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Номер заказа</th>
+                            <th>Время создания заказа</th>
+                            <th>Стоимость</th>
+                            <th>Стоимость со скидкой</th>
+                            <th>Статус</th>
+                            <th>VIN автомобиля</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in customer.orders %}
+                            <tr>
+                                <td><a href="{{ path('show_order', {orderId: order.id}) }}" target="_blank">{{ order.id }}</a> </td>
+                                <td>{{ order.created.format('d.m.Y H:i:s') }}</td>
+                                <td>{{ order.price | number_format(2) }} P</td>
+                                <td>{{ order.totalPrice | number_format(2) }} P</td>
+                                <td>{{ order.translatedStatus }}</td>
+                                <td>{{ order.vin }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Автомобили{% endblock %}
+                {% block box_body %}
+                    <table id="carsTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Производитель</th>
+                            <th>Модель</th>
+                            <th>Двигатель</th>
+                            <th>Год выпуска</th>
+                            <th>VIN код</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for car in customer.cars %}
+                            <tr>
+                                <td>{{ car.manufacturer }}</td>
+                                <td>{{ car.model }}</td>
+                                <td>{{ car.engine }}</td>
+                                <td>{{ car.year }}</td>
+                                <td>{{ car.vin }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ordersTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+            $('#carsTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+        });
+    </script>
+{% endblock %}

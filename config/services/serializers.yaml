@@ -1,0 +1,13 @@
+services:
+  app.normalizer.date_time_normalizer:
+    class: Symfony\Component\Serializer\Normalizer\DateTimeNormalizer
+
+  app.normalizer.get_set_normalizer:
+    class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+
+  app.serializer:
+    class: Symfony\Component\Serializer\Serializer
+    arguments:
+      $normalizers:
+        - '@app.normalizer.date_time_normalizer'
+        - '@app.normalizer.get_set_normalizer'

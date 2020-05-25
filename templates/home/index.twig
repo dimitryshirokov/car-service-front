@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Автосервис{% endblock %}
+
+{% block page_title %}Сводка{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            {% embed '@AdminLTE/Widgets/infobox-widget.html.twig' %}
+                {% set icon = 'fa fa-cart-plus' %}
+                {% set color = 'red' %}
+                {% block box_text %}<h4>Новые заказы</h4>{% endblock %}
+                {% block progress_description %}
+                    Всего: {{ resume.newOrders }}
+                    <br>
+                    <a href="{{ path('new_order_list') }}" target="_blank">Посмотреть</a>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            {% embed '@AdminLTE/Widgets/infobox-widget.html.twig' %}
+                {% set icon = 'fa fa-cart-plus' %}
+                {% set color = 'yellow' %}
+                {% block box_text %}<h4>Заказы в работе</h4>{% endblock %}
+                {% block progress_description %}
+                    Всего: {{ resume.inProgressOrders }}
+                    <br>
+                    <a href="{{ path('in_progress_order_list') }}" target="_blank">Посмотреть</a>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            {% embed '@AdminLTE/Widgets/infobox-widget.html.twig' %}
+                {% set icon = 'fa fa-users' %}
+                {% set color = 'green' %}
+                {% block box_text %}<h4>Клиенты</h4>{% endblock %}
+                {% block progress_description %}
+                    Всего: {{ resume.customers }}
+                    <br>
+                    <a href="{{ path('list_customers') }}" target="_blank">Посмотреть</a>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-lg-3 col-xs-6">
+            {% embed '@AdminLTE/Widgets/infobox-widget.html.twig' %}
+                {% set icon = 'fa fa-user' %}
+                {% set color = 'aqua' %}
+                {% block box_text %}<h4>Сотрудники</h4>{% endblock %}
+                {% block progress_description %}
+                    Всего: {{ resume.employers }}
+                    <br>
+                    <a href="{{ path('employee_list') }}" target="_blank">Посмотреть</a>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}

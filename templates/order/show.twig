@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заказ №{{ orderId }}{% endblock %}
+
+{% block page_title %}Заказ №{{ orderId }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-4">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Информация о заказе{% endblock %}
+                {% block box_body %}
+                    <p><span class="text-bold">Дата создания:</span> {{ order.created.format('d.m.Y H:i:s') }} </p>
+                    <p><span class="text-bold">Статус:</span> {{ order.translatedStatus }}</p>
+                    <hr />
+                    <p><span class="text-bold">Стоимость: </span> {{ order.price | number_format(2) }} P</p>
+                    <p><span class="text-bold">Стоимость со скидкой: </span> {{ order.totalPrice | number_format(2) }} P</p>
+                    {% if order.status != constant('App\\Model\\OrderShow\\Order::STATUS_DONE') and order.status != constant('App\\Model\\OrderShow\\Order::STATUS_CANCELLED') %}
+                        <hr />
+                        <a href="{{ path('cancel_order', {orderId: orderId}) }}">
+                            <button class="btn btn-danger pull-left">Отменить заказ</button>
+                        </a>
+                        {% if order.status == constant('App\\Model\\OrderShow\\Order::STATUS_NEW') %}
+                            <a href="{{ path('chage_order_to_in_progress', {orderId: orderId}) }}">
+                                <button class="btn btn-warning pull-right">Взять в работу</button>
+                            </a>
+                        {% elseif order.status == constant('App\\Model\\OrderShow\\Order::STATUS_IN_PROGRESS') %}
+                            <a href="{{ path('change_order_to_done', {orderId: orderId}) }}">
+                                <button class="btn btn-success pull-right">Завершить заказ</button>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-4">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Информация о заказчике{% endblock %}
+                {% block box_body %}
+                    <p><span class="text-bold">Фамилия: </span> {{ order.customer.surname }}</p>
+                    <p><span class="text-bold">Имя: </span> {{ order.customer.name }}</p>
+                    {% if order.customer.patronymic is not null %}
+                        <p><span class="text-bold">Отчество: </span> {{ order.customer.patronymic }}</p>
+                    {% endif %}
+                    <hr />
+                    <p><span class="text-bold">Телефон: </span> {{ order.customer.phone }}</p>
+                    <hr />
+                    <p><span class="text-bold">Размер скидки: </span> {{ order.customer.discountInPercents }}%</p>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-4">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Информация об автомобиле{% endblock %}
+                {% block box_body %}
+                    <p><span class="text-bold">Производитель:</span> {{ order.car.manufacturer }}</p>
+                    <p><span class="text-bold">Модель:</span> {{ order.car.model }}</p>
+                    <p><span class="text-bold">Двигатель:</span> {{ order.car.engine }}</p>
+                    <p><span class="text-bold">Год выпуска:</span> {{ order.car.year }}</p>
+                    <hr />
+                    <p><span class="text-bold">VIN код:</span> {{ order.car.vin }}</p>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Работы в заказе{% endblock %}
+                {% block box_body %}
+                    <table id="worksTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Вид работы</th>
+                                <th>Стоимость работы (по нормочасам)</th>
+                                <th>Часов работы</th>
+                                <th>Сотрудники</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doneWork in order.doneWorks %}
+                                <tr>
+                                    <td>{{ doneWork.work }}</td>
+                                    <td>{{ doneWork.price | number_format }} P</td>
+                                    <td>{{ doneWork.hours }}</td>
+                                    <td>{{ doneWork.employers }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Детали в заказе{% endblock %}
+                {% block box_body %}
+                    <table id="partsTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Название детали</th>
+                                <th>Номер детали</th>
+                                <th>Стоимость детали</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for part in order.parts %}
+                                <tr>
+                                    <td>{{ part.title }}</td>
+                                    <td>{{ part.number }}</td>
+                                    <td>{{ part.cost | number_format }} Р</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#worksTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+            $('#partsTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+        });
+    </script>
+{% endblock %}

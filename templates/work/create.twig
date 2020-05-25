@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Создание работы{% endblock %}
+
+{% block page_title %}Создание работы{% endblock %}
+
+{% block page_content %}
+    {% if workId is not null %}
+        <h4>Создана работа с ID {{ workId }}</h4>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-5">
+        {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+            {% block box_title %}Данные о работе{% endblock %}
+            {% block box_body %}
+                {{ form | raw }}
+            {% endblock %}
+        {% endembed %}
+        </div>
+    </div>
+{% endblock %}

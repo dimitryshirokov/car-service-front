@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список работ{% endblock %}
+
+{% block page_title %}Список работ{% endblock %}
+
+{% block page_content %}
+    <table id="worksTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%"></table>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#worksTable').DataTable({
+                searching: false,
+                ordering: false,
+                serverSide: true,
+                scrollX: true,
+                ajax: {
+                    url: '{{ path('ajax_works') }}'
+                },
+                columns: [
+                    {
+                        data: "title",
+                        title: "Название работы"
+                    },
+                    {
+                        data: "price",
+                        title: "Стоимость за нормочас"
+                    },
+                    {
+                        data: "positions",
+                        title: "Необходимые должности"
+                    }
+                ]
+            });
+        })
+    </script>
+{% endblock %}

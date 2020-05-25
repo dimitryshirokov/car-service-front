@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Сотрудник №{{ employerId }}{% endblock %}
+
+{% block page_title %}Сотрудник №{{ employerId }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Данные сотрудника{% endblock %}
+                {% block box_body %}
+                    <p><span class="text-bold">Фамилия: </span> {{ employer.surname }}</p>
+                    <p><span class="text-bold">Имя: </span> {{ employer.name }}</p>
+                    {% if employer.patronymic is not null %}
+                        <p><span class="text-bold">Отчество: </span> {{ employer.patronymic }}</p>
+                    {% endif %}
+                    <hr />
+                    <p><span class="text-bold">Должность: </span> {{ employer.position }}</p>
+                    <p><span class="text-bold">Дата начала работы: </span> {{ employer.startDate.format('d.m.Y') }}</p>
+                    <p><span class="text-bold">Телефон: </span> {{ employer.phone }}</p>
+                    <hr />
+                    <a href="{{ path('delete_employee', {employeeId: employer.id}) }}" target="_blank">
+                        <button class="btn btn-danger pull-left">Удалить</button>
+                    </a>
+                    <a href="{{ path('update_employee', {employeeId: employer.id}) }}" target="_blank">
+                        <button class="btn btn-warning pull-right">Обновить</button>
+                    </a>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Активные работы{% endblock %}
+                {% block box_body %}
+                    <table id="doneWorksTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Название работы</th>
+                            <th>Номер заказа</th>
+                            <th>Стоимость</th>
+                            <th>Часы</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for doneWork in employer.doneWorks %}
+                            <tr>
+                                <td>{{ doneWork.title }}</td>
+                                <td><a href="{{ path('show_order', {orderId: doneWork.orderId}) }}" target="_blank">{{ doneWork.orderId }}</a> </td>
+                                <td>{{ doneWork.price | number_format(2) }} P</td>
+                                <td>{{ doneWork.hours }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Возможные работы{% endblock %}
+                {% block box_body %}
+                    <table id="worksTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Название работы</th>
+                            <th>Стоимость</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for work in employer.works %}
+                            <tr>
+                                <td>{{ work.title }}</td>
+                                <td>{{ work.price | number_format(2) }} P</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#doneWorksTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+            $('#worksTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+        });
+    </script>
+{% endblock %}

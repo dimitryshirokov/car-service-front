@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+    <table id="ordersTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%"></table>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ordersTable').DataTable({
+                searching: false,
+                ordering: false,
+                serverSide: true,
+                ajax: {
+                    url: '{{ dataTablesUrl }}'
+                },
+                columns: [
+                    {
+                        data: "id",
+                        title: "Номер заказа",
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html("<a href='/order/show/"+oData.id+"' target='_blank'>" + oData.id + "</a>");
+                        }
+                    },
+                    {
+                        data: "created",
+                        title: "Дата создания"
+                    },
+                    {
+                        data: "price",
+                        title: "Стоимость"
+                    },
+                    {
+                        data: "totalPrice",
+                        title: "Стоимость со скидкой"
+                    },
+                    {
+                        data: "status",
+                        title: "Статус"
+                    },
+                    {
+                        data: "customer",
+                        title: "Заказчик",
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html("<a href='/customer/show/"+oData.customerId+"' target='_blank'>" + oData.customer + "</a>");
+                        }
+                    },
+                    {
+                        data: "vin",
+                        title: "VIN код автомобиля"
+                    }
+                ]
+            });
+        })
+    </script>
+{% endblock %}

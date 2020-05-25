@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Автомобиль №{{ carId }}{% endblock %}
+
+{% block page_title %}Автомобиль №{{ carId }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Данные автомобиля{% endblock %}
+                {% block box_body %}
+                    <p><span class="text-bold">Производитель:</span> {{ car.manufacturer }} </p>
+                    <p><span class="text-bold">Модель:</span> {{ car.model }} </p>
+                    <p><span class="text-bold">Двигатель:</span> {{ car.engine }} </p>
+                    <p><span class="text-bold">Год выпуска:</span> {{ car.year }} </p>
+                    <hr />
+                    <p><span class="text-bold">VIN код:</span> {{ car.vin }} </p>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Заказы{% endblock %}
+                {% block box_body %}
+                    <table id="ordersTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Номер заказа</th>
+                            <th>Время создания</th>
+                            <th>Стоимость</th>
+                            <th>Стоимость со скидкой</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in car.orders %}
+                            <tr>
+                                <td><a href="{{ path('show_order', {orderId: order.id}) }}" target="_blank">{{ order.id }}</a> </td>
+                                <td>{{ order.created.format('d.m.Y H:i') }}</td>
+                                <td>{{ order.price | number_format(2) }} P</td>
+                                <td>{{ order.totalPRice | number_format(2) }} P</td>
+                                <td>{{ order.translatedStatus }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Владельцы{% endblock %}
+                {% block box_body %}
+                    <table id="customersTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Телефон</th>
+                            <th>Скидка</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for customer in car.customers %}
+                            <tr>
+                                <td><a href="{{ path('show_customer', {customerId: customer.id}) }}" target="_blank">{{ customer.fio }}</a> </td>
+                                <td>{{ customer.phone }}</td>
+                                <td>{{ customer.discountInPercents }}%</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ordersTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+            $('#customersTable').DataTable({
+                scrollX: true,
+                searching: false,
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Список работников{% endblock %}
+
+{% block page_title %}Список работников{% endblock %}
+
+{% block page_content %}
+    <table id="employeeTable" class="display table table-bordered nowrap stripe row-border order-column table-striped" style="width:100%"></table>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('/lib/DataTables-1.10.21/css/dataTables.bootstrap.css') }}">
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/lib/jQuery-3.3.1/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/datatables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/lib/DataTables-1.10.21/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#employeeTable').DataTable({
+                searching: false,
+                ordering: false,
+                serverSide: true,
+                ajax: {
+                    url: '{{ path('ajax_employers') }}'
+                },
+                columns: [
+                    {
+                        data: "fio",
+                        title: "ФИО",
+                        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                            $(nTd).html("<a href='/employee/show/"+oData.id+"' target='_blank'>" + oData.fio + "</a>");
+                        }
+                    },
+                    {
+                        data: "startDate",
+                        title: "Дата начала работы"
+                    },
+                    {
+                        data: "position",
+                        title: "Должность"
+                    }
+                ]
+            });
+        })
+    </script>
+{% endblock %}

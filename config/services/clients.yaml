@@ -1,0 +1,20 @@
+services:
+  app.clients.car_service.http:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: '%car_service_url%'
+
+  app.rpc.message_factory:
+    class: Graze\GuzzleHttp\JsonRpc\Message\MessageFactory
+
+  app.clients.car_service.guzzle_rpc:
+    class: Graze\GuzzleHttp\JsonRpc\Client
+    arguments:
+      $httpClient: '@app.clients.car_service.http'
+      $factory: '@app.rpc.message_factory'
+
+  app.clients.car_service.client:
+    class: App\Client\CarServiceClient
+    arguments:
+      $rpcClient: '@app.clients.car_service.guzzle_rpc'

@@ -25,3 +25,90 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\EventSubscriber\KnpMenuBuilderSubscriber:
+        arguments:
+            $menuItems: '%side_menu%'
+
+    app.service.position_service:
+        class: App\Service\PositionService
+        arguments:
+            $client: '@app.clients.car_service.client'
+
+    App\Form\EmployeeForm:
+        arguments:
+            $positionService: '@app.service.position_service'
+
+    App\Form\WorkForm:
+        arguments:
+            $positionService: '@app.service.position_service'
+
+    app.service.employee_service:
+        class: App\Service\EmployeeService
+        arguments:
+            $client: '@app.clients.car_service.client'
+            $extractor: '@app.extractor.employee_extractor'
+            $hydrator: '@app.hydrator.employee_show_hydrator'
+
+    App\Controller\EmployeeController:
+        arguments:
+            $employeeService: '@app.service.employee_service'
+
+    App\Controller\WorkController:
+        arguments:
+            $workService: '@app.service.work_service'
+
+    App\Controller\CustomerController:
+        arguments:
+            $customerService: '@app.service.customer_service'
+
+    App\Controller\OrderController:
+        arguments:
+            $orderService: '@app.service.order_service'
+
+    App\Controller\CarController:
+        arguments:
+            $carService: '@app.service.car_service'
+
+    App\Controller\HomeController:
+        arguments:
+            $resumeService: '@app.service.resume_service'
+
+    app.service.work_service:
+        class: App\Service\WorkService
+        arguments:
+            $client: '@app.clients.car_service.client'
+            $extractor: '@app.extractor.work_extractor'
+
+    app.service.order_service:
+        class: App\Service\OrderService
+        arguments:
+            $client: '@app.clients.car_service.client'
+            $hydrator: '@app.hydrator.order_hydrator'
+
+    app.service.customer_service:
+        class: App\Service\CustomerService
+        arguments:
+            $client: '@app.clients.car_service.client'
+            $extractor: '@app.extractor.customer_extractor'
+            $hydrator: '@app.hydrator.customer_hydrator'
+
+    app.service.car_service:
+        class: App\Service\CarService
+        arguments:
+            $client: '@app.clients.car_service.client'
+            $extractor: '@app.extractor.car_extractor'
+            $hydrator: '@app.hydrator.car_show_hydrator'
+
+    app.service.resume_service:
+        class: App\Service\ResumeService
+        arguments:
+            $client: '@app.clients.car_service.client'
+            $hydrator: '@app.hydrator.resume_hydrator'
+
+imports:
+    - { resource: services/clients.yaml }
+    - { resource: services/extractors.yaml }
+    - { resource: services/serializers.yaml }
+    - { resource: services/data-tables.yaml }
+    - { resource: services/hydrators.yaml }

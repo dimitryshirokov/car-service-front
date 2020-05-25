@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Поиск заказа{% endblock %}
+
+{% block page_title %}Поиск заказа{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-5">
+        {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+            {% block box_title %}Поиск заказа по номеру{% endblock %}
+            {% block box_body %}
+                {{ form | raw }}
+            {% endblock %}
+        {% endembed %}
+        </div>
+        {% if errorMessage is not null %}
+            <div class="col-sm-5">
+                {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                    {% set boxtype = 'danger' %}
+                    {% block box_title %}Ошибка{% endblock %}
+                    {% block box_body %}
+                        {{ errorMessage }}
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

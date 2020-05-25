@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-sm-5">
+        {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+            {% block box_title %}Данные клиента{% endblock %}
+            {% block box_body %}
+                {{ form | raw }}
+            {% endblock %}
+        {% endembed %}
+        </div>
+    </div>
+{% endblock %}

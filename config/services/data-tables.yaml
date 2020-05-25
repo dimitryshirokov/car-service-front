@@ -1,0 +1,104 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  app.datatables.data_provider.employers_data_provider:
+    class: App\DataTables\DataProvider\EmployersDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+
+  app.datatables.handler.employers:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.employers_data_provider'
+    tags:
+      - { name: datatable, id: employers }
+
+  app.datatables.data_provider.works_data_provider:
+    class: App\DataTables\DataProvider\WorksDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+
+  app.datatables.handler.works:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.works_data_provider'
+    tags:
+      - { name: datatable, id: works }
+
+  app.datatables.data_provider.new_orders_data_provider:
+    class: App\DataTables\DataProvider\OrdersDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+      $status: !php/const App\Model\OrderShow\Order::STATUS_NEW
+
+  app.datatables.handler.new_orders:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.new_orders_data_provider'
+    tags:
+      - { name: datatable, id: new_orders }
+
+  app.datatables.data_provider.in_progress_orders_data_provider:
+    class: App\DataTables\DataProvider\OrdersDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+      $status: !php/const App\Model\OrderShow\Order::STATUS_IN_PROGRESS
+
+  app.datatables.data_provider.cancelled_orders_data_provider:
+    class: App\DataTables\DataProvider\OrdersDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+      $status: !php/const App\Model\OrderShow\Order::STATUS_CANCELLED
+
+  app.datatables.data_provider.done_orders_data_provider:
+    class: App\DataTables\DataProvider\OrdersDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+      $status: !php/const App\Model\OrderShow\Order::STATUS_DONE
+
+  app.datatables.handler.in_progress_orders:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.in_progress_orders_data_provider'
+    tags:
+      - { name: datatable, id: in_progress_orders }
+
+  app.datatables.handler.cancelled_orders:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.cancelled_orders_data_provider'
+    tags:
+      - { name: datatable, id: cancelled_orders }
+
+  app.datatables.handler.done_orders:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.done_orders_data_provider'
+    tags:
+      - { name: datatable, id: done_orders }
+
+  app.datatables.data_provider.customers_data_provider:
+    class: App\DataTables\DataProvider\CustomersDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+
+  app.datatables.handler.customers:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.customers_data_provider'
+    tags:
+      - { name: datatable, id: customers }
+
+  app.datatables.data_provider.cars_data_provider:
+    class: App\DataTables\DataProvider\CarsDataProvider
+    arguments:
+      $client: '@app.clients.car_service.client'
+
+  app.datatables.handler.cars:
+    class: App\DataTables\Handler\DataTablesHandler
+    arguments:
+      $dataProvider: '@app.datatables.data_provider.cars_data_provider'
+    tags:
+      - { name: datatable, id: cars }

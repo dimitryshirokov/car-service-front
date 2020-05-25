@@ -1,0 +1,25 @@
+services:
+  app.hydrator.order_hydrator:
+    class: App\Hydrator\OrderHydrator
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.hydrator.customer_hydrator:
+    class: App\Hydrator\CustomerHydrator
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.hydrator.car_show_hydrator:
+    class: App\Hydrator\CarShowHydrator
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.hydrator.employee_show_hydrator:
+    class: App\Hydrator\EmployeeHydrator
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.hydrator.resume_hydrator:
+    class: App\Hydrator\ResumeHydrator
+    arguments:
+      $serializer: '@app.serializer'

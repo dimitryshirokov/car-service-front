@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Создание заказа{% endblock %}
+
+{% block page_title %}Создать заказ{% endblock %}
+
+{% block page_content %}
+    {% if errorMessage is not null %}
+        <div class="row">
+            <div class="col-sm-12">
+                {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                    {% set boxtype = 'danger' %}
+                    {% block box_title %}Ошибка{% endblock %}
+                    {% block box_body %}
+                        <h3>{{ errorMessage }}</h3>
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Действия{% endblock %}
+                {% block box_body %}
+                    <form method="post">
+                        <input type="hidden" id="submit_phone" name="phone">
+                        <input type="hidden" id="submit_vin" name="vin">
+                        <input type="hidden" id="submit_works" name="works">
+                        <input type="hidden" id="submit_parts" name="parts">
+                        <input type="submit" id="totalSubmit" class="btn btn-success" value="Создать заказ">
+                    </form>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Клиент и автомобиль{% endblock %}
+                {% block box_body %}
+                    <form id="client_auto_form" role="form">
+                        <div>
+                            <div class="form-group">
+                                <label class="control-label required" for="client_phone">Телефон клиента</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <input type="tel" id="client_phone" required="required" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label required" for="vin_code">VIN код автомобиля</label>
+                                <input type="text" required="required" id="vin_code" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Предварительная стоимость{% endblock %}
+                {% block box_body %}
+                    <p class="text-bold">Стоимость за работы: <span id="workCost">0 P</span></p>
+                    <hr />
+                    <p class="text-bold">Стоимость за детали: <span id="partsCost">0 P</span></p>
+                    <hr />
+                    <h4>Итого: <span id="fullCost">0 P</span></h4>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Работы{% endblock %}
+                {% block box_body %}
+                    <div id="works"></div>
+                    <br>
+                    <div>
+                        <button class="btn btn-success" onclick="addWork()">Добавить работу</button>
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="col-sm-6">
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+                {% block box_title %}Детали{% endblock %}
+                {% block box_body %}
+                    <div id="parts"></div>
+                    <br>
+                    <div>
+                        <button class="btn btn-success" onclick="addPart()">Добавить детали</button>
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="add_employee_modal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="add_employee_modal_header"></div>
+                <div id="add_employee_modal_body"></div>
+                <div id="add_employee_modal_footer"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/js/works.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/totalPriceCalculator.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/parts.js') }}"></script>
+    <script type="text/javascript">
+        let works = {{ works | raw }};
+        let employers = {{ employers | raw }};
+        let id = 1;
+        let partId = 1;
+        let finalWorks = [];
+
+        $('#totalSubmit').click(function () {
+            $('#submit_phone').val($('#client_phone').val());
+            $('#submit_vin').val($('#vin_code').val());
+            $('#submit_works').val(JSON.stringify(finalWorks).toString());
+            $('#submit_parts').val(JSON.stringify(getParts()).toString());
+
+            $('#totalSubmit').submit();
+        });
+
+        function getParts() {
+            let parts = [];
+            for (let i = 0; i <= partId; i++) {
+                let elementPrice = $('#part_price_' + i);
+                let elementTitle = $('#part_title_' + i);
+                let elementNumber = $('#part_number_' + i);
+                if (elementPrice !== undefined && elementTitle !== undefined && elementNumber !== undefined) {
+                    if (elementPrice.val() !== undefined && elementTitle.val() !== undefined && elementNumber.val() !== undefined) {
+                        let item = {
+                            price: elementPrice.val(),
+                            title: elementTitle.val(),
+                            number: elementNumber.val()
+                        };
+                        parts.push(item);
+                    }
+                }
+            }
+            for (let i = 0; i < parts.length; i++) {
+                if (parts.hasOwnProperty(i)) {
+                    if ($.isEmptyObject(parts[i])) {
+                        parts.slice(i, 1);
+                    }
+                }
+            }
+
+            return parts;
+        }
+    </script>
+{% endblock %}

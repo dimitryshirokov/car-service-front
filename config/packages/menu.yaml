@@ -1,0 +1,92 @@
+parameters:
+  side_menu:
+    employers:
+      route: ''
+      label: 'Работники'
+      icon: 'fa fa-user'
+      children:
+        create_employee:
+          route: create_employee
+          label: 'Добавить сотрудника'
+          icon: 'fa fa-user-plus'
+        list_employers:
+          route: employee_list
+          label: 'Список сотрудников'
+          icon: 'fa fa-users'
+    works:
+      route: ''
+      label: 'Работы'
+      icon: 'fa fa-cog'
+      children:
+        create_work:
+          route: create_work
+          label: 'Добавить работу'
+          icon: 'fa fa-cog'
+        work_list:
+          route: work_list
+          label: 'Список работ'
+          icon: 'fa fa-cog'
+    orders:
+      route: ''
+      label: 'Заказы'
+      icon: 'fa fa-cart-arrow-down'
+      children:
+        create_order:
+          route: create_order
+          label: 'Новый заказ'
+          icon: 'fa fa-cart-plus'
+        find_order:
+          route: find_order
+          label: 'Поиск заказа'
+          icon: 'fa fa-search'
+        new_orders:
+          route: new_order_list
+          label: 'Новые заказы'
+          icon: 'fa fa-cart-arrow-down'
+        in_progress_orders:
+          route: in_progress_order_list
+          label: 'Заказы в работе'
+          icon: 'fa fa-cart-arrow-down'
+        done_orders:
+          route: done_order_list
+          label: 'Выполненные заказы'
+          icon: 'fa fa-cart-arrow-down'
+        cancelled_orders:
+          route: cancelled_order_list
+          label: 'Отменённые заказы'
+          icon: 'fa fa-cart-arrow-down'
+    clients:
+      route: ''
+      label: 'Клиенты'
+      icon: 'fa fa-user'
+      children:
+        create_client:
+          route: create_customer
+          label: 'Создать клиента'
+          icon: 'fa fa-user-plus'
+        find_client:
+          route: find_customer
+          label: 'Поиск клиента'
+          icon: 'fa fa-search'
+        list_customers:
+          route: list_customers
+          label: 'Список клиентов'
+          icon: 'fa fa-users'
+    car:
+      route: ''
+      label: 'Автомобили'
+      icon: 'fa fa-car'
+      children:
+        create_car:
+          route: create_car
+          label: 'Добавить автомобиль'
+          icon: 'fa fa-car'
+        list_cars:
+          route: list_cars
+          label: 'Список автомобилей'
+          icon: 'fa fa-car'
+        find_car:
+          route: find_car
+          label: 'Найти автомобиль'
+          icon: 'fa fa-search'
+

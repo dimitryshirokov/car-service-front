@@ -1,0 +1,2 @@
+parameters:
+  car_service_url: 'http://car_service_nginx:8600/rpc'

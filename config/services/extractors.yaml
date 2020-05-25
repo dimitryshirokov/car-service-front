@@ -1,0 +1,20 @@
+services:
+  app.extractor.employee_extractor:
+    class: App\Extractor\EmployeeExtractor
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.extractor.work_extractor:
+    class: App\Extractor\WorkExtractor
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.extractor.customer_extractor:
+    class: App\Extractor\CustomerExtractor
+    arguments:
+      $serializer: '@app.serializer'
+
+  app.extractor.car_extractor:
+    class: App\Extractor\CarExtractor
+    arguments:
+      $serializer: '@app.serializer'
