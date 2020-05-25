@@ -50,10 +50,10 @@ class CarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $carId = $this->getCarService()->create($form->getData());
+                return $this->redirectToRoute('show_car', ['carId' => $carId]);
             } catch (ValidationException $notFoundException) {
                 $errorMessage = $notFoundException->getMessage();
             }
-
         }
 
         $formView = $this->renderView('form.twig', ['form' => $form->createView()]);

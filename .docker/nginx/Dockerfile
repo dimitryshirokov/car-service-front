@@ -1,4 +1,4 @@
-# car-service-nginx
+# car-service-front-nginx
 FROM nginx:alpine
 
 MAINTAINER dimitryshirokov@yandex.ru
