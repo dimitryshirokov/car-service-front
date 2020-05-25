@@ -1,5 +1,5 @@
-# car-service-dev
-FROM car-service-main
+# car-service-front-dev
+FROM car-service-front-main
 
 USER root
 

@@ -1,4 +1,4 @@
-# car-service-main
+# car-service-front-main
 FROM php:7.4-fpm-alpine
 
 MAINTAINER dimitryshirokov@yandex.ru
