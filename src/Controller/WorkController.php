@@ -38,7 +38,7 @@ class WorkController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
         $workId = null;
         $model = new Work();
@@ -46,6 +46,9 @@ class WorkController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $workId = $this->getWorkService()->create($form->getData());
+            if ($workId !== null) {
+                return $this->redirectToRoute('work_list');
+            }
         }
 
         $formView = $this->renderView('form.twig', ['form' => $form->createView()]);
